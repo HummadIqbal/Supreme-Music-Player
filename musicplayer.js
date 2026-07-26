@@ -1,6 +1,8 @@
 console.log("Supreme Player Started");
 
 
+// Songs
+
 let songs = [
     "1.mp3",
     "2.mp3",
@@ -11,9 +13,11 @@ let songs = [
     "7.mp3",
     "8.mp3",
     "9.mp3",
-    "10.mp3"
+    "1a.mp3"
 ];
 
+
+// Song Names
 
 let songNames = [
     "BRUXO FANTASMA ULTRA SLOWED",
@@ -29,40 +33,81 @@ let songNames = [
 ];
 
 
+// Covers
+
+let covers = [
+    "image.png",
+    "Screenshot 2026-07-26 211212.png",
+    "Screenshot 2026-07-26 211417.png",
+    "Screenshot 2026-07-26 211352.png",
+    "Screenshot 2026-07-26 211611.png",
+    "Screenshot 2026-07-26 211440.png",
+    "Screenshot 2026-07-26 211541.png",
+    "Screenshot 2026-07-26 211247.png",
+    "Screenshot 2026-07-26 211633.png",
+    "Screenshot 2026-07-26 211744.png"
+];
+
+
+
+// Audio
+
 let audioElement = new Audio();
 
 let currentIndex = 0;
 
+
+
+// Elements
+
 let masterPlay = document.getElementById("masterPlay");
-let myProgressBar = document.getElementById("myprogressBar");
+
+let next = document.getElementById("next");
+
+let previous = document.getElementById("previous");
+
+let progressBar = document.getElementById("myprogressBar");
 
 let currentTime = document.getElementById("currentTime");
+
 let totalTime = document.getElementById("totalTime");
 
 let volumeBar = document.getElementById("volumeBar");
 
-let songInfo = document.querySelector(".songInfo");
+let masterSongName = document.getElementById("masterSongName");
+
+let masterCover = document.getElementById("masterCover");
 
 let songItems = document.getElementsByClassName("songPlay");
 
 let shuffleBtn = document.getElementById("shuffle");
+
 let repeatBtn = document.getElementById("repeat");
 
+
+
+// Buttons
+
 let isShuffle = false;
+
 let isRepeat = false;
 
 
 
 
+// Time format
 
 function formatTime(seconds){
 
     let min = Math.floor(seconds / 60);
+
     let sec = Math.floor(seconds % 60);
+
 
     if(sec < 10){
         sec = "0" + sec;
     }
+
 
     return `${min}:${sec}`;
 
@@ -71,65 +116,111 @@ function formatTime(seconds){
 
 
 
+// Load Song
 
 function loadSong(index){
 
+
     currentIndex = index;
+
 
     audioElement.src = songs[index];
 
-    songInfo.innerHTML =
-    `<img src="playing.gif" width="42px">
-    ${songNames[index]}`;
+
+    if(masterSongName){
+
+        masterSongName.innerText = songNames[index];
+
+    }
+
+
+    if(masterCover){
+
+        masterCover.src = covers[index];
+
+    }
+
 
 }
 
 
 
 
+
+
+// Play Song
 
 function playSong(){
 
+
     audioElement.play();
 
-    masterPlay.classList.remove("fa-circle-play");
-    masterPlay.classList.add("fa-circle-pause");
+
+    masterPlay.classList.remove(
+        "fa-circle-play"
+    );
+
+
+    masterPlay.classList.add(
+        "fa-circle-pause"
+    );
+
 
 }
 
 
 
 
+
+// Pause Song
 
 function pauseSong(){
 
+
     audioElement.pause();
 
-    masterPlay.classList.remove("fa-circle-pause");
-    masterPlay.classList.add("fa-circle-play");
+
+    masterPlay.classList.remove(
+        "fa-circle-pause"
+    );
+
+
+    masterPlay.classList.add(
+        "fa-circle-play"
+    );
+
 
 }
 
 
 
 
+
+// Main Play Button
 
 masterPlay.addEventListener("click",()=>{
 
 
     if(audioElement.paused){
 
-        if(!audioElement.src){
+
+        if(audioElement.src === ""){
+
             loadSong(currentIndex);
+
         }
 
+
         playSong();
+
 
     }
 
     else{
 
+
         pauseSong();
+
 
     }
 
@@ -139,6 +230,11 @@ masterPlay.addEventListener("click",()=>{
 
 
 
+
+
+
+// Song List Play Buttons
+
 Array.from(songItems).forEach((element,index)=>{
 
 
@@ -146,6 +242,7 @@ Array.from(songItems).forEach((element,index)=>{
 
 
         loadSong(index);
+
 
         playSong();
 
@@ -160,27 +257,40 @@ Array.from(songItems).forEach((element,index)=>{
 
 
 
-document.getElementById("next").addEventListener("click",()=>{
+
+
+// Next Button
+
+next.addEventListener("click",()=>{
 
 
     if(isShuffle){
 
-        currentIndex = Math.floor(Math.random()*songs.length);
+
+        currentIndex =
+        Math.floor(Math.random()*songs.length);
+
 
     }
 
     else{
 
+
         currentIndex++;
 
+
         if(currentIndex >= songs.length){
+
             currentIndex = 0;
+
         }
+
 
     }
 
 
     loadSong(currentIndex);
+
 
     playSong();
 
@@ -192,7 +302,11 @@ document.getElementById("next").addEventListener("click",()=>{
 
 
 
-document.getElementById("previous").addEventListener("click",()=>{
+
+
+// Previous Button
+
+previous.addEventListener("click",()=>{
 
 
     currentIndex--;
@@ -207,6 +321,7 @@ document.getElementById("previous").addEventListener("click",()=>{
 
     loadSong(currentIndex);
 
+
     playSong();
 
 
@@ -217,7 +332,14 @@ document.getElementById("previous").addEventListener("click",()=>{
 
 
 
-audioElement.addEventListener("timeupdate",()=>{
+
+
+// Progress Bar Update
+
+
+audioElement.addEventListener(
+"timeupdate",
+()=>{
 
 
     if(audioElement.duration){
@@ -225,18 +347,21 @@ audioElement.addEventListener("timeupdate",()=>{
 
         let progress =
         (audioElement.currentTime /
-        audioElement.duration) * 100;
+        audioElement.duration)*100;
 
 
-        myProgressBar.value = progress;
+        progressBar.value = progress;
+
 
 
         currentTime.innerText =
         formatTime(audioElement.currentTime);
 
 
+
         totalTime.innerText =
         formatTime(audioElement.duration);
+
 
 
     }
@@ -247,12 +372,21 @@ audioElement.addEventListener("timeupdate",()=>{
 
 
 
-myProgressBar.addEventListener("input",()=>{
+
+
+
+
+// Change Song Time
+
+progressBar.addEventListener(
+"input",
+()=>{
 
 
     audioElement.currentTime =
-    (myProgressBar.value/100)
-    * audioElement.duration;
+    (progressBar.value/100)
+    *
+    audioElement.duration;
 
 
 });
@@ -262,7 +396,14 @@ myProgressBar.addEventListener("input",()=>{
 
 
 
-volumeBar.addEventListener("input",()=>{
+
+
+// Volume
+
+
+volumeBar.addEventListener(
+"input",
+()=>{
 
 
     audioElement.volume =
@@ -273,18 +414,34 @@ volumeBar.addEventListener("input",()=>{
 
 
 
-audioElement.addEventListener("ended",()=>{
+
+
+
+
+// Auto Next
+
+
+audioElement.addEventListener(
+"ended",
+()=>{
 
 
     if(isRepeat){
+
+
+        audioElement.currentTime = 0;
+
 
         playSong();
 
+
     }
 
     else{
 
-        document.getElementById("next").click();
+
+        next.click();
+
 
     }
 
@@ -295,21 +452,73 @@ audioElement.addEventListener("ended",()=>{
 
 
 
-shuffleBtn.addEventListener("click",()=>{
 
 
-    isShuffle=!isShuffle;
+
+// Shuffle Button
 
 
-    if(isShuffle){
+shuffleBtn.addEventListener(
+"click",
+()=>{
 
-        shuffleBtn.style.color="lime";
 
-    }
+    isShuffle = !isShuffle;
 
-    else{
 
-        shuffleBtn.style.color="white";
+    shuffleBtn.style.color =
+    isShuffle ? "lime" : "white";
+
+
+});
+
+
+
+
+
+
+
+
+// Repeat Button
+
+
+repeatBtn.addEventListener(
+"click",
+()=>{
+
+
+    isRepeat = !isRepeat;
+
+
+    repeatBtn.style.color =
+    isRepeat ? "lime" : "white";
+
+
+});
+
+
+
+
+
+
+
+
+// Keyboard Control
+
+
+document.addEventListener(
+"keydown",
+(e)=>{
+
+
+    if(e.code==="Space"){
+
+
+        e.preventDefault();
+
+
+        masterPlay.click();
+
 
     }
 
@@ -320,31 +529,13 @@ shuffleBtn.addEventListener("click",()=>{
 
 
 
-repeatBtn.addEventListener("click",()=>{
 
 
-    isRepeat=!isRepeat;
 
-
-    if(isRepeat){
-
-        repeatBtn.style.color="lime";
-
-    }
-
-    else{
-
-        repeatBtn.style.color="white";
-
-    }
-
-
-});
-
+// Default Settings
 
 
 audioElement.volume = 0.8;
-
 
 
 loadSong(0);
